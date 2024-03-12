@@ -9,11 +9,13 @@ import Box from "./component/draggable";
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
   const [offset, setOffset] = useState({ x: 0, y: 0 });
 
   const handleBoxMouseDown = (event, index) => {
     setIsDragging(true);
+    setDraggedIndex(index);
 
     const box = boxes[index];
     setOffset({
@@ -23,15 +25,24 @@ function App() {
   };
 
   const handleBoxMouseMove = (event, index) => {
-    if (isDragging) {
+    if (event.buttons !== 1) {
+      setIsDragging(false);
+      setDraggedIndex(null);
+    }
+    if (isDragging && draggedIndex !== null) {
       const newBoxes = [...boxes];
       const box = newBoxes[index];
+      const maxX = window.innerWidth - parseInt(box.width, 10) - 20;
+      const maxY = window.innerHeight - parseInt(box.height, 10) - 10;
+      const minY = 60;
+
       box.position = {
-        x: event.clientX - offset.x,
-        y: event.clientY - offset.y,
+        x: Math.max(0, Math.min(event.clientX - offset.x, maxX)),
+        y: Math.max(minY, Math.min(event.clientY - offset.y, maxY)),
       };
       setBoxes(newBoxes);
     }
+    
   };
 
   const handleBoxMouseUp = () => {
@@ -139,7 +150,10 @@ function App() {
 
       <div className="header">
         <p>Dynamic Position</p>
-        <IoMdAdd className="add_button" onClick={openModal} />
+        <div onClick={openModal}>
+          <IoMdAdd className="add_button" />
+          <p>Add</p>
+        </div>
       </div>
 
       {isModalOpen && (
@@ -239,6 +253,7 @@ function App() {
             handleBoxMouseDown={handleBoxMouseDown}
             handleBoxMouseMove={handleBoxMouseMove}
             handleBoxMouseUp={handleBoxMouseUp}
+            isDragging={isDragging && index === draggedIndex}
           />
         ))}
       </div>

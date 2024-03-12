@@ -39,7 +39,7 @@ export const predefinedBoxes = [
         height: "200px",
         borderRadius: 9999,
         text: "Box 5",
-        position: { x: 900, y: 600 },
+        position: { x: 900, y: 300 },
       },
     {
       width: "90px",

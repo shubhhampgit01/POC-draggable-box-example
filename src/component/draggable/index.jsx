@@ -1,6 +1,13 @@
 import React from "react";
 
-const Box = ({ box, index, handleBoxMouseDown, handleBoxMouseMove, handleBoxMouseUp }) => {
+const Box = ({
+  box,
+  index,
+  handleBoxMouseDown,
+  handleBoxMouseMove,
+  handleBoxMouseUp,
+  isDragging,
+}) => {
   return (
     <div
       key={index}
@@ -9,10 +16,12 @@ const Box = ({ box, index, handleBoxMouseDown, handleBoxMouseMove, handleBoxMous
         height: box.height,
         borderRadius: box.borderRadius,
         background: "#3498db",
+        userSelect: isDragging ? 'none' : 'auto',
         margin: "10px",
         display: "inline-block",
         left: `${box.position.x}px`,
         top: `${box.position.y}px`,
+        zIndex: isDragging ? 1 : 0,
       }}
       className="boxMain draggable_box"
       onMouseDown={(event) => handleBoxMouseDown(event, index)}
